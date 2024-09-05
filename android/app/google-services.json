@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "292939237316",
+    "project_id": "recommendersaver",
+    "storage_bucket": "recommendersaver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292939237316:android:fc954ae37ec6f939330691",
+        "android_client_info": {
+          "package_name": "com.example.recommender_saver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC65Kw-jMjYJUi3N9q60nRZDCll3b1zRNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
