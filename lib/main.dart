@@ -19,14 +19,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize Hive
-  await Hive.initFlutter();
+  // // Initialize Hive
+  // await Hive.initFlutter();
 
-  //adapters registration
-  Hive.registerAdapter(NoteModelAdapter());
+  // //adapters registration
+  // Hive.registerAdapter(HiveNoteModelAdapter());
 
-  // Open the box with the correct type
-  await Hive.openBox<NoteModel>('notes');
+  // // Open the box with the correct type
+  // await Hive.openBox<NoteModel>('notes');
 
   final authenticationRepository = AuthenticationRepository();
   await authenticationRepository.user.first;

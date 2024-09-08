@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recommender_saver/home/cubit/home_cubit.dart';
 
+import '../../category_selection/cubit/category_cubit.dart';
+import '../../category_selection/models/category_model.dart';
 import '../../common/firebase_lib.dart';
+import '../../common/glass_back_button.dart';
 import '../../constants/colors.dart';
+import '../model/notes_model.dart';
 
 class NoteDetailPage extends StatelessWidget {
   final HomeCubit homeCubit;
@@ -39,11 +43,11 @@ class NoteDetailPage extends StatelessWidget {
                           },
                         ),
                         Text(
-                          state.notes[index].title,
+                          state.notes[index].parentName,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 30,
+                            fontSize: 24,
                           ),
                         ),
                         // Share Button with Glass Effect
@@ -74,95 +78,139 @@ class NoteDetailPage extends StatelessWidget {
   }
 }
 
-final String cat_name = "Movie";
-
 class _NoteDetailWidget extends StatelessWidget {
   const _NoteDetailWidget(this.note);
   final NoteModel note;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 400,
-      width: 400,
-      decoration: BoxDecoration(
-          border: Border.all(
-            color:
-                secondryColor.withOpacity(0.5), // Purple color for the border
-            width: 1, // 1px border width
-          ),
-          color: Color(0xff262626),
-          borderRadius: BorderRadius.all(
-            Radius.circular(30),
-          )),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+    print(note.parentId);
+    CategoryModel? category;
+    return BlocBuilder<CategoryCubit, CategoryState>(
+      builder: (context, state) {
+        if (state is CategoryLoaded)
+          try {
+            category = state.categories
+                .firstWhere((category) => category.id == note.parentId);
+            print(category!.patent_name); // Output: movie
+          } catch (e) {
+            print("Category not found");
+          }
+        return Column(
           children: [
-            Row(
-              children: [
-                Text(
-                  "Name:",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
+            if (state is CategoryLoaded)
+              Container(
+                height: 400,
+                width: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: secondryColor
+                        .withOpacity(0.5), // Purple color for the border
+                    width: 1, // 1px border width
+                  ),
+                  color: Color(0xff262626),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30),
                   ),
                 ),
-                Spacer(),
-                Text(
-                  "Movie name:",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _dataList(category!.name, note.name),
+                      _dataList(category!.detail_01, note.detail01),
+                      _dataList(category!.detail_02, note.detail02),
+                      _dataList(category!.Recommender, note.recommender),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: DashedLine(),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: Text(
+                          '${note.notes}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
           ],
-        ),
+        );
+      },
+    );
+  }
+
+  Widget _dataList(String title, String data) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '$title:',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+          Spacer(),
+          Flexible(
+            child: Text(
+              '$data',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
-class GlassButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
+class DashedLine extends StatelessWidget {
+  final double dashWidth;
+  final double dashHeight;
+  final double dashSpacing;
+  final Color color;
 
-  GlassButton({required this.icon, required this.onPressed});
+  const DashedLine({
+    this.dashWidth = 5,
+    this.dashHeight = 1,
+    this.dashSpacing = 3,
+    this.color = Colors.grey,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ClipRRect(
-        borderRadius:
-            BorderRadius.circular(20.0), // Rounded corners for the glass effect
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: 10.0, sigmaY: 10.0), // Blur effect for frosted glass
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color:
-                  Colors.white.withOpacity(0.2), // Semi-transparent background
-              borderRadius: BorderRadius.circular(25),
-              border: Border.all(
-                color: Colors.purple.withOpacity(0.5),
-                width: 1.0,
-              ),
-            ),
-            child: IconButton(
-              icon: Icon(icon),
-              color: Colors.black, // Icon color
-              onPressed: onPressed,
-              splashRadius: 25,
-            ),
-          ),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxCount =
+            (constraints.constrainWidth() / (dashWidth + dashSpacing)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(boxCount, (_) {
+            return Container(
+              width: dashWidth,
+              height: dashHeight,
+              color: color,
+            );
+          }),
+        );
+      },
     );
   }
 }

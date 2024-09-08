@@ -1,18 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:recommender_saver/app/app.dart';
 import 'package:recommender_saver/constants/colors.dart';
-import 'package:recommender_saver/category_selection/models/category_model.dart';
-import 'package:recommender_saver/hive/notes.dart';
-import 'package:recommender_saver/home/home.dart';
 import 'package:recommender_saver/home/view/note_category.dart';
 import 'package:recommender_saver/home/view/note_detail.dart';
-import 'package:recommender_saver/model.dart';
-import 'package:intl/intl.dart';
-
 import '../../category_selection/category.dart';
+import '../../common/glass_floating_action_button.dart';
 import '../cubit/home_cubit.dart';
+import '../model/notes_model.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,156 +19,153 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
-    // List<NoteX> filteredNotes = sampleNotes;
-    bool sorted = false;
-
-    // final List<CategoryModel> categories = [
-    //   CategoryModel(
-    //     cat_id: 'eee',
-    //     cat_name: 'food',
-    //     createdAt: DateTime.now(),
-    //   ),
-    // ];
 
     return Scaffold(
       backgroundColor: primaryColor,
       body: BlocProvider(
         create: (context) => HomeCubit()..init(),
-        child: BlocListener<HomeCubit, NoteState>(
-            listener: (context, state) {},
-            child: BlocBuilder<HomeCubit, NoteState>(
-              builder: (context, state) {
-                final cubit = BlocProvider.of<HomeCubit>(context);
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Recommends',
-                            style: TextStyle(fontSize: 30, color: Colors.white),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              cubit.toggleNotesLoadedStyle();
-                              print(state);
-
-                              // setState(() {
-                              //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
-                              // });
-
-                              // context
-                              //     .read<AppBloc>()
-                              //     .add(const AppLogoutRequested());
-                            },
-                            padding: const EdgeInsets.all(0),
-                            icon: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade800.withOpacity(.8),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: const Icon(
-                                Icons.menu_outlined,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                        ],
+        child: BlocListener<HomeCubit, NoteState>(listener: (context, state) {
+          if (state is NoteLoaded) {}
+        }, child: BlocBuilder<HomeCubit, NoteState>(
+          builder: (context, state) {
+            final cubit = BlocProvider.of<HomeCubit>(context);
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Recommends',
+                        style: TextStyle(fontSize: 30, color: Colors.white),
                       ),
-                      // Avatar(photo: user.photo),
-                      // const SizedBox(height: 4),
-                      // Text(user.email ?? '', style: textTheme.titleLarge),
-                      // const SizedBox(height: 4),
-                      // Text(user.name ?? '', style: textTheme.headlineSmall),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        ///onChanged: onSearchTextChanged,
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.white),
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 12),
-                          hintText: "Search notes...",
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                          fillColor: Colors.grey.shade800,
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
+                      IconButton(
+                        onPressed: () {
+                          // cubit.toggleNotesLoadedStyle();
+                          // print(state);
+
+                          // setState(() {
+                          //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
+                          // });
+
+                          context
+                              .read<AppBloc>()
+                              .add(const AppLogoutRequested());
+                        },
+                        padding: const EdgeInsets.all(0),
+                        icon: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade800.withOpacity(.8),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Icon(
+                            Icons.menu_outlined,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      NoteCategory(),
-                      if (state is NoteInitial)
-                        Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-
-                      if (state is NoteLoaded)
-                        Expanded(
-                          child: !state.isTrue
-                              ? GridView.builder(
-                                  padding: EdgeInsets.only(top: 20, bottom: 10),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 12,
-                                    mainAxisSpacing: 12,
-                                  ),
-                                  itemBuilder: (_, index) => GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => NoteDetailPage(
-                                            homeCubit: cubit,
-                                            index: index,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: HomeWidget(
-                                      index: index,
-                                      notes: state.notes[index],
-                                    ),
-                                  ),
-                                  itemCount: state.notes.length,
-                                )
-                              : ListView.builder(
-                                  padding: const EdgeInsets.only(top: 30),
-                                  itemCount: state.notes.length,
-                                  itemBuilder: (context, index) {
-                                    return HomeWidget(
-                                      index: index,
-                                      notes: state.notes[index],
-                                    );
-                                  },
-                                ),
-                        )
+                      )
                     ],
                   ),
-                );
-              },
-            )),
+                  // Avatar(photo: user.photo),
+                  // const SizedBox(height: 4),
+                  // Text(user.email ?? '', style: textTheme.titleLarge),
+                  // const SizedBox(height: 4),
+                  // Text(user.name ?? '', style: textTheme.headlineSmall),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    ///onChanged: onSearchTextChanged,
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      hintText: "Search notes...",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
+                      fillColor: Colors.grey.shade800,
+                      filled: true,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.transparent),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  const NoteCategory(),
+                  if (state is NoteInitial)
+                    Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+
+                  if (state is NoteLoaded)
+                    Expanded(
+                      child: !state.isList
+                          ? GridView.builder(
+                              padding: EdgeInsets.only(top: 20, bottom: 10),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent:
+                                    200, // Max width for each item
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 1.4,
+                              ),
+                              // gridDelegate:
+                              //     SliverGridDelegateWithFixedCrossAxisCount(
+                              //   crossAxisCount: 2,
+                              //   crossAxisSpacing: 12,
+                              //   mainAxisSpacing: 12,
+                              //   childAspectRatio: 1.4,
+                              // ),
+                              itemBuilder: (_, index) => GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => NoteDetailPage(
+                                        homeCubit: cubit,
+                                        index: index,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  child: HomeWidget(
+                                    index: index,
+                                    notes: state.notes[index],
+                                  ),
+                                ),
+                              ),
+                              itemCount: state.notes.length,
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(top: 30),
+                              itemCount: state.notes.length,
+                              itemBuilder: (context, index) {
+                                return HomeWidget(
+                                  index: index,
+                                  notes: state.notes[index],
+                                );
+                              },
+                            ),
+                    )
+                ],
+              ),
+            );
+          },
+        )),
       ),
       floatingActionButton: GlassFloatingActionButton(
         icon: Icons.add,
@@ -195,14 +188,11 @@ class HomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<HomeCubit>(context);
     return Container(
-      width: 200,
-      height: 300,
       decoration: BoxDecoration(
         border: Border.all(
-          color: secondryColor.withOpacity(0.5), // Purple color for the border
-          width: 1, // 1px border width
+          color: secondryColor.withOpacity(0.5),
+          width: 1,
         ),
         color: Color(0xff262626),
         borderRadius: BorderRadius.only(
@@ -213,123 +203,113 @@ class HomeWidget extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: secondryColor
+                          .withOpacity(0.5), // Purple color for the border
+                      width: 1, // 1px border width
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topRight: index % 2 == 0
+                          ? Radius.circular(30)
+                          : Radius.circular(0),
+                      topLeft: index % 2 != 0
+                          ? Radius.circular(30)
+                          : Radius.circular(0),
+                      bottomRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Text(
+                      '${notes.parentName}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Category Name', // Category Name
+                    'Name:',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
-                  Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
+                  Flexible(
+                    child: Text(
+                      '${notes.name}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontStyle: FontStyle.normal,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              Text(
-                'Created: Aug 29, 2024', // Date created
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 12,
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Recommender:',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      '${notes.recommender}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontStyle: FontStyle.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Text(
+                  '${notes.notes}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
                 ),
               ),
-              Spacer(),
-              Text(
-                'Movie Name: Inception', // Movie Name
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Recommended by: John Doe', // Recommender Name
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
+              Center(
+                child: Text(
+                  DateFormat('MMM d, yyyy, HH:mm').format(notes.createdAt),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 10,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class GlassFloatingActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  const GlassFloatingActionButton({
-    Key? key,
-    required this.icon,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipOval(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // This creates the glass border effect
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              width: 68,
-              height: 68,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
-                  width: 4,
-                ),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.2),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ),
-          // This is the actual button with black background
-          Positioned(
-            child: GestureDetector(
-              onTap: onPressed,
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: secondryColor.withOpacity(0.5),
-                ),
-                child: Center(
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -27,17 +27,33 @@ class NoteLoading extends NoteState {}
 // Define a state when notes are loaded with isTrue value
 class NoteLoaded extends NoteState {
   final List<NoteModel> notes;
-  final bool isTrue; // Add isTrue with a default value
+  final List<NoteModel> sortedNotes;
+  final bool isSorted;
+  final bool isList;
+  final String selectedId;
 
   // Constructor with a default value for isTrue
-  NoteLoaded({required this.notes, this.isTrue = false});
+  NoteLoaded({
+    this.selectedId = '',
+    required this.notes,
+    this.isSorted = false,
+    this.isList = false,
+    required this.sortedNotes,
+  });
 
   // Create a copyWith method to update the state
   NoteLoaded copyWith(
-      {List<NoteModel>? notes, List<CategoryModel>? category, bool? isTrue}) {
+      {List<NoteModel>? notes,
+      List<NoteModel>? sortedNotes,
+      String? selectedId,
+      bool? isSorted,
+      bool? isGrid}) {
     return NoteLoaded(
       notes: notes ?? this.notes,
-      isTrue: isTrue ?? this.isTrue,
+      selectedId: selectedId ?? this.selectedId,
+      sortedNotes: sortedNotes ?? this.sortedNotes,
+      isSorted: isSorted ?? this.isSorted,
+      isList: isGrid ?? this.isList,
     );
   }
 

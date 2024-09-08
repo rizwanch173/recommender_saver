@@ -5,10 +5,10 @@ import 'package:recommender_saver/hive/task.dart';
 
 class HiveDataStore {
   static const boxName = "notes";
-  final Box<NoteModel> box = Hive.box<NoteModel>(boxName);
+  final Box<NoteModelHive> box = Hive.box<NoteModelHive>(boxName);
 
   /// Add new Task
-  Future<void> addTask({required NoteModel task}) async {
+  Future<void> addTask({required NoteModelHive task}) async {
     await box.add(task);
   }
 

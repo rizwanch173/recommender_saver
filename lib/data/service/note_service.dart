@@ -1,13 +1,17 @@
-import 'package:recommender_saver/local_db/hive_data.dart';
 import '../../common/firebase_lib.dart';
+import '../../home/model/notes_model.dart';
 
 class NoteService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final HiveDataStore _hive = HiveDataStore();
-  CollectionReference collectionRef =
-      FirebaseFirestore.instance.collection('notes');
+  late CollectionReference userNotesRef;
+
+  NoteService() {
+    userNotesRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .collection('user_notes');
+  }
 
   Future<void> createNote(NoteModel note) async {
     try {
@@ -16,18 +20,29 @@ class NoteService {
       // await _firestore.collection('notes').doc().set(note.toMap());
       // fetchNotes(); // Refresh the list after creating a note
 
-      await _firestore.collection('category').doc().set(note.toMap());
+      // await _firestore.collection('user_notes').doc().set(note.toMap());
+
+      // Add a new note to the subcollection
+      await userNotesRef.add(note.toMap());
+      print('Note created successfully for user: ${user!.uid}');
     } catch (e) {
       print(e.toString());
     }
   }
 
   Future<List<NoteModel>> fetchAllNotes() async {
-    QuerySnapshot querySnapshot = await collectionRef.get();
-    List<NoteModel> noteX;
-    noteX = querySnapshot.docs.map((doc) {
-      return NoteModel.fromFirestore(doc);
-    }).toList();
-    return noteX;
+    List<NoteModel> note;
+    try {
+      QuerySnapshot querySnapshot = await userNotesRef.get();
+
+      note = querySnapshot.docs.map((doc) {
+        return NoteModel.fromFirestore(doc);
+      }).toList();
+    } catch (e) {
+      print('Error fetching notes: $e');
+      return [];
+    }
+
+    return note;
   }
 }

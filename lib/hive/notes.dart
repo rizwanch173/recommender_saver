@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'notes.g.dart';
 
 @HiveType(typeId: 1)
-class NoteModel extends HiveObject {
+class NoteModelHive extends HiveObject {
   @HiveField(0)
   final String id;
 
@@ -27,7 +27,7 @@ class NoteModel extends HiveObject {
     };
   }
 
-  NoteModel({
+  NoteModelHive({
     required this.id,
     required this.title,
     required this.content,
@@ -35,9 +35,9 @@ class NoteModel extends HiveObject {
   });
 
   // Factory method to create a Note from a Firestore document
-  factory NoteModel.fromFirestore(DocumentSnapshot doc) {
+  factory NoteModelHive.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return NoteModel(
+    return NoteModelHive(
       id: doc.id, // Using document ID as note ID
       title: data['title'] ?? '', // Default to empty string if null
       content: data['content'] ?? '', // Default to empty string if null

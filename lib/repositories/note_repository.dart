@@ -1,6 +1,8 @@
 import 'package:recommender_saver/data/service/note_service.dart';
 import 'package:recommender_saver/hive/notes.dart';
 
+import '../home/model/notes_model.dart';
+
 class NoteRepository {
   final NoteService _service;
 
@@ -9,6 +11,6 @@ class NoteRepository {
   Future<List<NoteModel>> fetchAllNotes() async =>
       await _service.fetchAllNotes();
 
-  Future<void> createNote(NoteModel note) async =>
+  Future<void> createNote({required NoteModel note}) async =>
       await _service.createNote(note);
 }

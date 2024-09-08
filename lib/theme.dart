@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
+  textSelectionTheme: TextSelectionThemeData(
+    selectionColor: Colors.green,
+    cursorColor: Colors.green,
+    selectionHandleColor: Colors.green,
+  ),
   textTheme: GoogleFonts.openSansTextTheme(),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color.fromARGB(255, 113, 243, 230),
