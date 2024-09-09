@@ -1,7 +1,6 @@
 part of 'home_cubit.dart';
 
 abstract class NoteState {
-  @override
   List<Object> get props => [];
 }
 
@@ -58,7 +57,7 @@ class NoteLoaded extends NoteState {
   }
 
   @override
-  List<Object> get props => [notes];
+  List<Object> get props => [notes, sortedNotes, isSorted, isList, selectedId];
 }
 
 class NoteError extends NoteState {

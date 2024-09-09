@@ -1,11 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recommender_saver/home/cubit/home_cubit.dart';
-
 import '../../category_selection/cubit/category_cubit.dart';
 import '../../category_selection/models/category_model.dart';
-import '../../common/firebase_lib.dart';
 import '../../common/glass_back_button.dart';
 import '../../constants/colors.dart';
 import '../model/notes_model.dart';
@@ -43,7 +40,7 @@ class NoteDetailPage extends StatelessWidget {
                           },
                         ),
                         Text(
-                          state.notes[index].parentName,
+                          state.sortedNotes[index].parentName,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -63,7 +60,7 @@ class NoteDetailPage extends StatelessWidget {
                           const EdgeInsets.only(top: 100, left: 20, right: 20),
                       child: Column(
                         children: [
-                          _NoteDetailWidget(state.notes[index]),
+                          _NoteDetailWidget(state.sortedNotes[index]),
                         ],
                       ),
                     ),

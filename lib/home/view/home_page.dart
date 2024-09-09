@@ -17,67 +17,59 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AppBloc bloc) => bloc.state.user);
-
     return Scaffold(
       backgroundColor: primaryColor,
-      body: BlocProvider(
-        create: (context) => HomeCubit()..init(),
-        child: BlocListener<HomeCubit, NoteState>(listener: (context, state) {
-          if (state is NoteLoaded) {}
-        }, child: BlocBuilder<HomeCubit, NoteState>(
-          builder: (context, state) {
-            final cubit = BlocProvider.of<HomeCubit>(context);
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Recommends',
-                        style: TextStyle(fontSize: 30, color: Colors.white),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // cubit.toggleNotesLoadedStyle();
-                          // print(state);
+      body: BlocBuilder<HomeCubit, NoteState>(
+        builder: (context, state) {
+          final cubit = BlocProvider.of<HomeCubit>(context);
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'My notes',
+                      style: TextStyle(fontSize: 30, color: Colors.white),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // cubit.toggleNotesLoadedStyle();
+                        // print(state);
 
-                          // setState(() {
-                          //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
-                          // });
+                        // setState(() {
+                        //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
+                        // });
 
-                          context
-                              .read<AppBloc>()
-                              .add(const AppLogoutRequested());
-                        },
-                        padding: const EdgeInsets.all(0),
-                        icon: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade800.withOpacity(.8),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(
-                            Icons.menu_outlined,
-                            color: Colors.white,
-                          ),
+                        context.read<AppBloc>().add(const AppLogoutRequested());
+                      },
+                      padding: const EdgeInsets.all(0),
+                      icon: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade800.withOpacity(.8),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: const Icon(
+                          Icons.menu_outlined,
+                          color: Colors.white,
                         ),
-                      )
-                    ],
-                  ),
-                  // Avatar(photo: user.photo),
-                  // const SizedBox(height: 4),
-                  // Text(user.email ?? '', style: textTheme.titleLarge),
-                  // const SizedBox(height: 4),
-                  // Text(user.name ?? '', style: textTheme.headlineSmall),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                      ),
+                    )
+                  ],
+                ),
+                // Avatar(photo: user.photo),
+                // const SizedBox(height: 4),
+                // Text(user.email ?? '', style: textTheme.titleLarge),
+                // const SizedBox(height: 4),
+                // Text(user.name ?? '', style: textTheme.headlineSmall),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (state is NoteLoaded)
                   TextField(
-                    ///onChanged: onSearchTextChanged,
+                    onChanged: cubit.onSearchTextChanged,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -99,73 +91,72 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  const NoteCategory(),
-                  if (state is NoteInitial)
-                    Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                SizedBox(
+                  height: 20,
+                ),
+                const NoteCategory(),
+                if (state is NoteInitial)
+                  Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
+                  ),
 
-                  if (state is NoteLoaded)
-                    Expanded(
-                      child: !state.isList
-                          ? GridView.builder(
-                              padding: EdgeInsets.only(top: 20, bottom: 10),
-                              gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent:
-                                    200, // Max width for each item
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                childAspectRatio: 1.4,
-                              ),
-                              // gridDelegate:
-                              //     SliverGridDelegateWithFixedCrossAxisCount(
-                              //   crossAxisCount: 2,
-                              //   crossAxisSpacing: 12,
-                              //   mainAxisSpacing: 12,
-                              //   childAspectRatio: 1.4,
-                              // ),
-                              itemBuilder: (_, index) => GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NoteDetailPage(
-                                        homeCubit: cubit,
-                                        index: index,
-                                      ),
+                if (state is NoteLoaded)
+                  Expanded(
+                    child: !state.isList
+                        ? GridView.builder(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent:
+                                  200, // Max width for each item
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1.4,
+                            ),
+                            // gridDelegate:
+                            //     SliverGridDelegateWithFixedCrossAxisCount(
+                            //   crossAxisCount: 2,
+                            //   crossAxisSpacing: 12,
+                            //   mainAxisSpacing: 12,
+                            //   childAspectRatio: 1.4,
+                            // ),
+                            itemBuilder: (_, index) => GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => NoteDetailPage(
+                                      homeCubit: cubit,
+                                      index: index,
                                     ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  child: HomeWidget(
-                                    index: index,
-                                    notes: state.notes[index],
                                   ),
-                                ),
-                              ),
-                              itemCount: state.notes.length,
-                            )
-                          : ListView.builder(
-                              padding: const EdgeInsets.only(top: 30),
-                              itemCount: state.notes.length,
-                              itemBuilder: (context, index) {
-                                return HomeWidget(
-                                  index: index,
-                                  notes: state.notes[index],
                                 );
                               },
+                              child: SizedBox(
+                                child: HomeWidget(
+                                  index: index,
+                                  notes: state.sortedNotes[index],
+                                ),
+                              ),
                             ),
-                    )
-                ],
-              ),
-            );
-          },
-        )),
+                            itemCount: state.sortedNotes.length,
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.only(top: 30),
+                            itemCount: state.sortedNotes.length,
+                            itemBuilder: (context, index) {
+                              return HomeWidget(
+                                index: index,
+                                notes: state.sortedNotes[index],
+                              );
+                            },
+                          ),
+                  )
+              ],
+            ),
+          );
+        },
       ),
       floatingActionButton: GlassFloatingActionButton(
         icon: Icons.add,

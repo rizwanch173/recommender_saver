@@ -6,6 +6,7 @@ import 'package:recommender_saver/app/app.dart';
 import 'package:recommender_saver/theme.dart';
 
 import '../../category_selection/category.dart';
+import '../../home/cubit/home_cubit.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -25,6 +26,9 @@ class App extends StatelessWidget {
             create: (_) => AppBloc(
               authenticationRepository: _authenticationRepository,
             ),
+          ),
+          BlocProvider<HomeCubit>(
+            create: (context) => HomeCubit()..init(),
           ),
           BlocProvider<CategoryCubit>(
             create: (context) => CategoryCubit()..init(),

@@ -26,6 +26,14 @@ class HomeCubit extends Cubit<NoteState> {
     fetchNotesForUser();
   }
 
+  @override
+  Future<void> close() {
+    // Perform any cleanup operations here
+
+    print("stop state close");
+    return Future.value();
+  }
+
   void toggleNotesLoadedStyle() {
     if (state is NoteLoaded) {
       final currentState = state as NoteLoaded;
@@ -64,11 +72,48 @@ class HomeCubit extends Cubit<NoteState> {
   void toggleNoteSort({required bool isSorted, required String selectedId}) {
     if (state is NoteLoaded) {
       final currentState = state as NoteLoaded;
+
+      List<NoteModel> sortedNotes = isSorted
+          ? currentState.notes.where((note) {
+              return note.parentId == selectedId;
+            }).toList()
+          : currentState.notes;
+
       if (!isClosed) {
-        emit(currentState.copyWith(isSorted: isSorted, selectedId: selectedId));
+        emit(currentState.copyWith(
+            isSorted: isSorted,
+            selectedId: selectedId,
+            sortedNotes: sortedNotes));
       }
 
       print(currentState.selectedId);
+    }
+  }
+
+  void onSearchTextChanged(String searchText) {
+    if (state is NoteLoaded) {
+      final currentState = state as NoteLoaded;
+
+      List<NoteModel> tempSortedNotes = currentState.isSorted
+          ? currentState.notes.where((note) {
+              return note.parentId == currentState.selectedId;
+            }).toList()
+          : currentState.notes;
+
+      if (searchText.isEmpty) {
+        emit(currentState.copyWith(sortedNotes: tempSortedNotes));
+      } else {
+        List<NoteModel> sortedNotes = tempSortedNotes.where((note) {
+          return note.name.toLowerCase().contains(searchText.toLowerCase()) ||
+              note.detail01.toLowerCase().contains(searchText.toLowerCase()) ||
+              note.detail02.toLowerCase().contains(searchText.toLowerCase()) ||
+              note.recommender.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
+
+        if (!isClosed) {
+          emit(currentState.copyWith(sortedNotes: sortedNotes));
+        }
+      }
     }
   }
 
