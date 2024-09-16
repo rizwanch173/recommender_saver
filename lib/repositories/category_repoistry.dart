@@ -7,8 +7,11 @@ class CategoryRepoistry {
   CategoryRepoistry(this._service);
 
   Future<List<CategoryModel>> fetchAllCategory() async =>
-      await _service.fetchAllCategory();
+      await _service.fetch();
 
   Future<bool> createCategory(CategoryModel category) async =>
-      await _service.createCategory(category);
+      await _service.create(category);
+
+  Future<bool> deleteCategory({required String categoryId}) async =>
+      await _service.delete(categoryId: categoryId);
 }

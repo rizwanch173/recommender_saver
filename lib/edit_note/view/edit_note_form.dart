@@ -2,27 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:recommender_saver/constants/colors.dart';
-import 'package:recommender_saver/home/home.dart';
+import 'package:recommender_saver/edit_note/cubit/edit_note_cubit.dart';
 import '../../category_selection/models/category_model.dart';
 import '../../home/cubit/home_cubit.dart';
-import '../cubit/add_note_cubit.dart';
 
-class AddNoteForm extends StatelessWidget {
-  AddNoteForm({super.key, required this.category});
+class EditNoteForm extends StatelessWidget {
+  EditNoteForm({super.key, required this.category, required this.index});
   final CategoryModel category;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddNoteCubit, AddNoteState>(
+    return BlocListener<EditNoteCubit, EditNoteState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
-          context.read<HomeCubit>().init();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
-          );
+          // context.read<HomeCubit>().updateLocal(index: index, note: null, );
+
+          Navigator.pop(context);
         } else if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -32,9 +28,9 @@ class AddNoteForm extends StatelessWidget {
             );
         }
       },
-      child: BlocBuilder<AddNoteCubit, AddNoteState>(
+      child: BlocBuilder<EditNoteCubit, EditNoteState>(
         builder: (context, state) {
-          final cubit = BlocProvider.of<AddNoteCubit>(context);
+          final cubit = BlocProvider.of<EditNoteCubit>(context);
           return Align(
             alignment: const Alignment(0, -1 / 3),
             child: Padding(
@@ -71,7 +67,9 @@ class AddNoteForm extends StatelessWidget {
                   ),
                   const SizedBox(height: 25),
                   Align(
-                    child: _AddButton(),
+                    child: _AddButton(
+                      index: index,
+                    ),
                   ),
                 ],
               ),
@@ -159,10 +157,13 @@ class _customInput extends StatelessWidget {
 }
 
 class _AddButton extends StatelessWidget {
+  final int index;
+
+  const _AddButton({required this.index});
   @override
   Widget build(BuildContext context) {
     final isInProgress = context.select(
-      (AddNoteCubit cubit) => cubit.state.status.isInProgress,
+      (EditNoteCubit cubit) => cubit.state.status.isInProgress,
     );
 
     if (isInProgress)
@@ -174,10 +175,10 @@ class _AddButton extends StatelessWidget {
       );
 
     return ElevatedButton(
-      onPressed: () {
-        context.read<AddNoteCubit>().addFormSubmitted();
+      onPressed: () async {
+        context.read<EditNoteCubit>().addFormSubmitted(index);
       },
-      child: Text('Create'),
+      child: Text('Update'),
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,

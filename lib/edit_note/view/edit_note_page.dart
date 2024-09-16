@@ -1,26 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recommender_saver/add_note/note_view.dart';
-import 'package:recommender_saver/add_note/view/add_note_form.dart';
 import 'package:recommender_saver/constants/colors.dart';
+import 'package:recommender_saver/edit_note/cubit/edit_note_cubit.dart';
+import 'package:recommender_saver/edit_note/view/edit_note_form.dart';
+import 'package:recommender_saver/home/cubit/home_cubit.dart';
+import 'package:recommender_saver/home/model/notes_model.dart';
 import '../../category_selection/models/category_model.dart';
 import '../../common/glass_back_button.dart';
 
-class AddNotePage extends StatelessWidget {
-  AddNotePage({super.key, required this.category});
+class EditNotePage extends StatelessWidget {
+  EditNotePage({
+    super.key,
+    required this.category,
+    required this.note,
+    required this.index,
+  });
   final CategoryModel category;
+  final NoteModel note;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: primaryColor,
         body: BlocProvider(
-          create: (context) => AddNoteCubit()
-            ..init(
+          create: (context) => EditNoteCubit(
+            context.read<HomeCubit>(),
+          )..init(
               categoryId: category.parentId,
               categoryName: category.patent_name,
+              nameControler: note.name,
+              detail01Controler: note.detail01,
+              detail02Controler: note.detail02,
+              recommenderControler: note.recommender,
+              noteControler: note.notes,
+              noteId: note.id,
             ),
-          child: BlocBuilder<AddNoteCubit, AddNoteState>(
+          child: BlocBuilder<EditNoteCubit, EditNoteState>(
             builder: (context, state) {
               // final cubit = BlocProvider.of<AddNoteCubit>(context);
               return Column(
@@ -58,7 +74,10 @@ class AddNotePage extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                  AddNoteForm(category: category)
+                  EditNoteForm(
+                    category: category,
+                    index: index,
+                  )
                 ],
               );
             },

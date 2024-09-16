@@ -1,41 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
-part 'notes_model.g.dart';
+part 'category_model.g.dart';
 
 @HiveType(typeId: 1)
-class NoteModel extends HiveObject {
+class CategoryAddModel extends HiveObject {
   @HiveField(0)
-  final String parentId;
-
-  @HiveField(1)
   final String name;
 
-  @HiveField(2)
+  @HiveField(1)
   final String parentName;
 
-  @HiveField(3)
+  @HiveField(2)
   final String detail01;
 
-  @HiveField(4)
+  @HiveField(3)
   final String detail02;
 
-  @HiveField(5)
+  @HiveField(4)
   final String recommender;
 
-  @HiveField(6)
+  @HiveField(5)
   final String notes;
 
-  @HiveField(7)
+  @HiveField(6)
   final DateTime createdAt;
 
-  @HiveField(8)
+  @HiveField(7)
   final String id;
 
+  @HiveField(8)
+  final String parentId;
+
   // Constructor with all required fields
-  NoteModel({
-    this.id = '',
-    required this.parentId,
+  CategoryAddModel({
+    this.parentId = '',
+    required this.id,
     required this.name,
     required this.parentName,
     required this.detail01,
@@ -48,7 +48,7 @@ class NoteModel extends HiveObject {
   // Convert a Note into a Map
   Map<String, dynamic> toMap() {
     return {
-      'id': parentId,
+      'id': id,
       'name': name,
       'patent_name': parentName,
       'detail_01': detail01,
@@ -60,10 +60,9 @@ class NoteModel extends HiveObject {
   }
 
   // Factory method to create a Note from a Firestore document
-  factory NoteModel.fromFirestore(DocumentSnapshot doc) {
+  factory CategoryAddModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    print(doc.id);
-    return NoteModel(
+    return CategoryAddModel(
       id: doc.id, // Using document ID as note ID
       parentId: data['id'] ?? '',
       name: data['name'] ?? '', // Default to empty string if null
@@ -75,10 +74,5 @@ class NoteModel extends HiveObject {
       createdAt: DateTime.parse(data['createdAt'] ??
           DateTime.now().toIso8601String()), // Default to current time if null
     );
-  }
-
-  @override
-  String toString() {
-    return 'NoteModel(id: $id, parentId: $parentId, name: $name, parentName: $parentName, detail01: $detail01, detail02: $detail02, recommender: $recommender, notes: $notes, createdAt: $createdAt)';
   }
 }

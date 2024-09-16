@@ -30,6 +30,15 @@ class NoteService {
     }
   }
 
+  Future<void> updateNote({required NoteModel note}) async {
+    try {
+      await userNotesRef.doc(note.id).update(note.toMap());
+      print('Note updated successfully for user: ${user!.uid}');
+    } catch (e) {
+      print('Failed to update note: ${e.toString()}');
+    }
+  }
+
   Future<List<NoteModel>> fetchAllNotes() async {
     List<NoteModel> note;
     try {
@@ -44,5 +53,15 @@ class NoteService {
     }
 
     return note;
+  }
+
+  Future<bool> deleteNote({required String noteId}) async {
+    try {
+      await userNotesRef.doc(noteId).delete();
+      return true;
+    } catch (e) {
+      print('Error deleting note: $e');
+      return false;
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recommender_saver/add_note/note_view.dart';
 import 'package:recommender_saver/app/app.dart';
 import 'package:recommender_saver/theme.dart';
 
@@ -32,6 +33,9 @@ class App extends StatelessWidget {
           ),
           BlocProvider<CategoryCubit>(
             create: (context) => CategoryCubit()..init(),
+          ),
+          BlocProvider<AddNoteCubit>(
+            create: (context) => AddNoteCubit(),
           ),
           // Add other Blocs/Cubits if needed
         ],

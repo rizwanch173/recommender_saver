@@ -1,5 +1,4 @@
 import 'package:recommender_saver/data/service/note_service.dart';
-import 'package:recommender_saver/hive/notes.dart';
 
 import '../home/model/notes_model.dart';
 
@@ -13,4 +12,10 @@ class NoteRepository {
 
   Future<void> createNote({required NoteModel note}) async =>
       await _service.createNote(note);
+
+  Future<void> updateNote({required NoteModel note}) async =>
+      await _service.updateNote(note: note);
+
+  Future<bool> deleteNote({required String noteId}) async =>
+      await _service.deleteNote(noteId: noteId);
 }

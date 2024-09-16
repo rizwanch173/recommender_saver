@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/constants/colors.dart';
-import 'package:recommender_saver/home/view/note_category.dart';
-
+import '../../add_category/views/add_category_page.dart';
 import '../../add_note/view/add_note_page.dart';
 import '../../common/category_selection_widget.dart';
 import '../../common/glass_back_button.dart';
 import '../../common/glass_floating_action_button.dart';
-import '../../home/home.dart';
-import '../../home/view/note_detail.dart';
 
 class CategorySelection extends StatelessWidget {
   const CategorySelection({super.key});
@@ -26,8 +24,6 @@ class CategorySelection extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 60.0),
         child: BlocBuilder<CategoryCubit, CategoryState>(
           builder: (context, state) {
-            final cubit = BlocProvider.of<CategoryCubit>(context);
-
             return Column(
               children: [
                 Row(
@@ -80,6 +76,7 @@ class CategorySelection extends StatelessWidget {
                             },
                             child: CategorySelectionWidget(
                               category: state.categories[index],
+                              index: index,
                             ),
                           ),
                         );
@@ -93,7 +90,9 @@ class CategorySelection extends StatelessWidget {
       ),
       floatingActionButton: GlassFloatingActionButton(
         icon: Icons.add,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push<void>(AddCategoryPage.route());
+        },
       ),
     );
   }

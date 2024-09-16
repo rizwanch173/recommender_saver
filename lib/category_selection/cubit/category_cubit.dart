@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
 import 'package:recommender_saver/data/service/category_service.dart';
 import 'package:recommender_saver/repositories/category_repoistry.dart';
 import 'package:uuid/uuid.dart';
@@ -26,20 +27,17 @@ class CategoryCubit extends Cubit<CategoryState> {
     //   createdAt: DateTime.now(),
     // );
 
-    _fetchAllCategory();
+    fetchAllCategory();
   }
 
   Future<bool> createCategory(categoryModel) async {
     if (await _repository.createCategory(categoryModel)) {
       print("success");
     }
-
-    // emit(NoteLoaded(notes: noteX));
-
     return true;
   }
 
-  Future<List<CategoryModel>> _fetchAllCategory() async {
+  Future<List<CategoryModel>> fetchAllCategory() async {
     List<CategoryModel> categories;
 
     categories = await _repository.fetchAllCategory();
@@ -47,5 +45,44 @@ class CategoryCubit extends Cubit<CategoryState> {
     emit(CategoryLoaded(categories: categories));
 
     return categories;
+  }
+
+  Future<void> deleteCategory({required String categoryId}) async {
+    bool isDeleted = await _repository.deleteCategory(categoryId: categoryId);
+
+    if (isDeleted) {
+      if (state is CategoryLoaded) {
+        final currentState = state as CategoryLoaded;
+        final updatedCategory = currentState.categories
+            .where((category) => category.parentId != categoryId)
+            .toList();
+
+        emit(
+          currentState.copyWith(categories: updatedCategory),
+        );
+      }
+    } else {
+      // Handle failure case if needed
+    }
+
+    toggleshowMenubar(isMenuShow: false, selectedIndex: -1);
+  }
+
+  //   // Method to update categories
+  // void updateLocalCategories(List<CategoryModel> newCategories) {
+  //   if (state is CategoryLoaded) {
+  //     final currentState = state as CategoryLoaded;
+  //     emit(currentState.copyWith(categories: newCategories));
+  //   }
+  // }
+
+  void toggleshowMenubar(
+      {required bool isMenuShow, required int selectedIndex}) {
+    if (state is CategoryLoaded) {
+      final currentState = state as CategoryLoaded;
+      emit(currentState.copyWith(
+          isMenuShow: isMenuShow, selectedIndex: selectedIndex));
+      print("called");
+    }
   }
 }

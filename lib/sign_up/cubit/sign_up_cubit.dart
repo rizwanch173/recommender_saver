@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+import 'package:recommender_saver/common/firebase_lib.dart';
 
 part 'sign_up_state.dart';
 
@@ -63,15 +65,16 @@ class SignUpCubit extends Cubit<SignUpState> {
   }
 
   Future<void> signUpFormSubmitted() async {
-    await FirebaseFirestore.instance.clearPersistence();
+    //  await FirebaseFirestore.instance.clearPersistence();
     if (!state.isValid) return;
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-      await _authenticationRepository.signUp(
+      UserCredential? userCredential = await _authenticationRepository.signUp(
         email: state.email.value,
         password: state.password.value,
       );
       emit(state.copyWith(status: FormzSubmissionStatus.success));
+      unawaited(copyDefaultCategoriesToUser(userCredential!.user!.uid));
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       emit(
         state.copyWith(
@@ -82,5 +85,37 @@ class SignUpCubit extends Cubit<SignUpState> {
     } catch (_) {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
+  }
+
+// Function to copy default categories
+  Future<void> copyDefaultCategoriesToUser(String userId) async {
+    // Reference to the default categories collection
+    CollectionReference defaultCategories =
+        FirebaseFirestore.instance.collection('default_category');
+
+    // Reference to the user's categories collection
+    CollectionReference userCategories = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('categories');
+
+    // Get all documents from the default categories
+    QuerySnapshot querySnapshot = await defaultCategories.get();
+
+    // Batch to write all categories at once
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      // Create a new document reference for the user categories
+      DocumentReference newDocRef = userCategories.doc();
+
+      // Set data from default category to user's categories collection
+      batch.set(newDocRef, doc.data());
+    }
+
+    print("new catcrated");
+
+    // Commit the batch
+    await batch.commit();
   }
 }

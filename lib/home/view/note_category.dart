@@ -87,8 +87,8 @@ class NoteCategory extends StatelessWidget {
                                       .toggleNoteSort(
                                           isSorted: true,
                                           selectedId:
-                                              state.categories[index].id);
-                                  print(state.categories[index].id);
+                                              state.categories[index].parentId);
+                                  print(state.categories[index].parentId);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -133,7 +133,7 @@ class CategoryButton extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25.0),
                   border: Border.all(
-                    color: category.id != state.selectedId
+                    color: category.parentId != state.selectedId
                         ? secondryColor.withOpacity(0.5)
                         : secondryColor,
                   ),

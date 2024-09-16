@@ -29,12 +29,14 @@ class GlassButton extends StatelessWidget {
                 width: 1.0,
               ),
             ),
-            child: IconButton(
-              icon: Icon(icon),
-              color: Colors.white.withOpacity(0.6), // Icon color
-              onPressed: onPressed,
-              splashRadius: 25,
-              splashColor: secondryColor,
+            child: Center(
+              child: IconButton(
+                icon: Icon(icon),
+                color: Colors.white.withOpacity(0.6), // Icon color
+                onPressed: onPressed,
+                splashRadius: 25,
+                splashColor: secondryColor,
+              ),
             ),
           ),
         ),

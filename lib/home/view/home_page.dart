@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
         builder: (context, state) {
           final cubit = BlocProvider.of<HomeCubit>(context);
           return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 50, 16, 0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                             color: Colors.grey.shade800.withOpacity(.8),
                             borderRadius: BorderRadius.circular(10)),
                         child: const Icon(
-                          Icons.menu_outlined,
+                          Icons.exit_to_app,
                           color: Colors.white,
                         ),
                       ),
@@ -103,55 +103,64 @@ class HomePage extends StatelessWidget {
                   ),
 
                 if (state is NoteLoaded)
-                  Expanded(
-                    child: !state.isList
-                        ? GridView.builder(
-                            padding: EdgeInsets.only(top: 20, bottom: 10),
-                            gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent:
-                                  200, // Max width for each item
-                              mainAxisSpacing: 10,
-                              crossAxisSpacing: 10,
-                              childAspectRatio: 1.4,
-                            ),
-                            // gridDelegate:
-                            //     SliverGridDelegateWithFixedCrossAxisCount(
-                            //   crossAxisCount: 2,
-                            //   crossAxisSpacing: 12,
-                            //   mainAxisSpacing: 12,
-                            //   childAspectRatio: 1.4,
-                            // ),
-                            itemBuilder: (_, index) => GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => NoteDetailPage(
-                                      homeCubit: cubit,
-                                      index: index,
+                  BlocListener<HomeCubit, NoteState>(
+                    listener: (context, state) {
+                      if (state is NoteLoaded) {
+                        print(state.sortedNotes.length);
+                        print("state.sortedNotes.length");
+                      }
+                    },
+                    child: Expanded(
+                      child: !state.isList
+                          ? GridView.builder(
+                              padding: EdgeInsets.only(top: 20, bottom: 10),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent:
+                                    200, // Max width for each item
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 1.4,
+                              ),
+                              // gridDelegate:
+                              //     SliverGridDelegateWithFixedCrossAxisCount(
+                              //   crossAxisCount: 2,
+                              //   crossAxisSpacing: 12,
+                              //   mainAxisSpacing: 12,
+                              //   childAspectRatio: 1.4,
+                              // ),
+                              itemBuilder: (_, index) => GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => NoteDetailPage(
+                                        homeCubit: cubit,
+                                        index: index,
+                                        notesf: state.sortedNotes[index],
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  child: HomeWidget(
+                                    index: index,
+                                    notes: state.sortedNotes[index],
                                   ),
-                                );
-                              },
-                              child: SizedBox(
-                                child: HomeWidget(
-                                  index: index,
-                                  notes: state.sortedNotes[index],
                                 ),
                               ),
+                              itemCount: state.sortedNotes.length,
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(top: 30),
+                              itemCount: state.sortedNotes.length,
+                              itemBuilder: (context, index) {
+                                return HomeWidget(
+                                  index: index,
+                                  notes: state.sortedNotes[index],
+                                );
+                              },
                             ),
-                            itemCount: state.sortedNotes.length,
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(top: 30),
-                            itemCount: state.sortedNotes.length,
-                            itemBuilder: (context, index) {
-                              return HomeWidget(
-                                index: index,
-                                notes: state.sortedNotes[index],
-                              );
-                            },
-                          ),
+                    ),
                   )
               ],
             ),
@@ -280,15 +289,15 @@ class HomeWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Center(
-                child: Text(
-                  '${notes.notes}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-              ),
+              // Center(
+              //   child: Text(
+              //     '${notes.notes}',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontSize: 10,
+              //     ),
+              //   ),
+              // ),
               Center(
                 child: Text(
                   DateFormat('MMM d, yyyy, HH:mm').format(notes.createdAt),

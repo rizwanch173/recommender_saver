@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recommender_saver/add_note/note_view.dart';
-import 'package:recommender_saver/add_note/view/add_note_form.dart';
-import 'package:recommender_saver/constants/colors.dart';
-import '../../category_selection/models/category_model.dart';
+import 'package:recommender_saver/add_category/views/add_category_form.dart';
 import '../../common/glass_back_button.dart';
+import '../../constants/colors.dart';
+import '../cubit/add_category_cubit.dart';
 
-class AddNotePage extends StatelessWidget {
-  AddNotePage({super.key, required this.category});
-  final CategoryModel category;
+class AddCategoryPage extends StatelessWidget {
+  const AddCategoryPage({super.key});
+
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const AddCategoryPage());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: primaryColor,
         body: BlocProvider(
-          create: (context) => AddNoteCubit()
-            ..init(
-              categoryId: category.parentId,
-              categoryName: category.patent_name,
-            ),
-          child: BlocBuilder<AddNoteCubit, AddNoteState>(
+          create: (context) => AddCategoryCubit(),
+          child: BlocBuilder<AddCategoryCubit, AddCategoryState>(
             builder: (context, state) {
               // final cubit = BlocProvider.of<AddNoteCubit>(context);
               return Column(
@@ -43,7 +41,7 @@ class AddNotePage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${category.patent_name}',
+                        '',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           color: Colors.white,
@@ -58,7 +56,7 @@ class AddNotePage extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                  AddNoteForm(category: category)
+                  const AddCategoryForm()
                 ],
               );
             },

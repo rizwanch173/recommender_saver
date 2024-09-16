@@ -1,11 +1,7 @@
 import 'dart:async';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../di/components/service_locator.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';

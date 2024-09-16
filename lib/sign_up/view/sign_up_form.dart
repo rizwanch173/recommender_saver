@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/sign_up/sign_up.dart';
 import 'package:formz/formz.dart';
 
@@ -50,9 +51,52 @@ class _EmailInput extends StatelessWidget {
       key: const Key('signUpForm_emailInput_textField'),
       onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
       keyboardType: TextInputType.emailAddress,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+      cursorColor: Colors.white,
       decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
         labelText: 'email',
         helperText: '',
+        labelStyle: const TextStyle(
+          color: Colors.white,
+        ),
         errorText: displayError != null ? 'invalid email' : null,
       ),
     );
@@ -71,9 +115,52 @@ class _PasswordInput extends StatelessWidget {
       onChanged: (password) =>
           context.read<SignUpCubit>().passwordChanged(password),
       obscureText: true,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+      cursorColor: Colors.white,
       decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
         labelText: 'password',
         helperText: '',
+        labelStyle: const TextStyle(
+          color: Colors.white,
+        ),
         errorText: displayError != null ? 'invalid password' : null,
       ),
     );
@@ -92,9 +179,52 @@ class _ConfirmPasswordInput extends StatelessWidget {
       onChanged: (confirmPassword) =>
           context.read<SignUpCubit>().confirmedPasswordChanged(confirmPassword),
       obscureText: true,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+      cursorColor: Colors.white,
       decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(
+              width: 1,
+              color: secondryColor), // Replace secondryColor with actual color
+        ),
         labelText: 'confirm password',
         helperText: '',
+        labelStyle: const TextStyle(
+          color: Colors.white,
+        ),
         errorText: displayError != null ? 'passwords do not match' : null,
       ),
     );
@@ -116,15 +246,26 @@ class _SignUpButton extends StatelessWidget {
 
     return ElevatedButton(
       key: const Key('signUpForm_continue_raisedButton'),
+      onPressed: () {
+        if (isValid) {
+          context.read<SignUpCubit>().signUpFormSubmitted();
+        } else {
+          return null;
+        }
+      },
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(left: 50, right: 50),
+        backgroundColor: secondryColor,
+        textStyle: TextStyle(color: Colors.white),
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(20),
         ),
-        backgroundColor: Colors.orangeAccent,
+        elevation: 4.0,
       ),
-      onPressed: isValid
-          ? () => context.read<SignUpCubit>().signUpFormSubmitted()
-          : null,
+      // onPressed: isValid
+      //     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+      //     : null,
       child: const Text('SIGN UP'),
     );
   }
