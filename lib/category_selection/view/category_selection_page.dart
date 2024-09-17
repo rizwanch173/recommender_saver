@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import '../../add_category/views/add_category_page.dart';
@@ -83,6 +82,9 @@ class CategorySelection extends StatelessWidget {
                       },
                     ),
                   ),
+                SizedBox(
+                  height: 30,
+                )
               ],
             );
           },

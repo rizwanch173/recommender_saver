@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recommender_saver/common/animated_bar.dart';
 import 'package:recommender_saver/common/glass_back_button.dart';
+import 'package:recommender_saver/edit_category/view/edit_category_page.dart';
 import 'package:recommender_saver/home/cubit/home_cubit.dart';
 
 import '../category_selection/cubit/category_cubit.dart';
@@ -100,6 +101,26 @@ class CategorySelectionWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             GlassButton(
+                              icon: Icons.edit,
+                              onPressed: () {
+                                // Navigator.of(context).pop();
+                                BlocProvider.of<HomeCubit>(context)
+                                    .toggleshowMenubar(isClose: true);
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => EditCategoryPage(
+                                      category: category,
+                                      index: index,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GlassButton(
                               icon: Icons.delete,
                               onPressed: () {
                                 showCupertinoDialog(
@@ -144,13 +165,6 @@ class CategorySelectionWidget extends StatelessWidget {
                                 );
                               },
                             ),
-                            // SizedBox(
-                            //   width: 15,
-                            // ),
-                            // GlassButton(
-                            //   icon: Icons.edit,
-                            //   onPressed: () {},
-                            // ),
                           ],
                         ),
                       ),

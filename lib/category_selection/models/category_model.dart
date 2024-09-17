@@ -60,7 +60,7 @@ class CategoryModel {
       detail_02: data['detail_02'] ?? '',
       Recommender: data['Recommender'] ?? '',
       Note: data['Note'] ?? '',
-      createdAt: data['createdAt'] ?? '',
+      createdAt: data['created_at'] ?? '',
       patent_name: data['patent_name'] ?? '',
     );
   }

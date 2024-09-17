@@ -79,35 +79,47 @@ class CategoryService {
       return false;
     }
   }
-}
 
-Future<void> deleteCategoryAndNotes(String categoryId) async {
-  final CollectionReference categoriesRef =
-      FirebaseFirestore.instance.collection('categories');
-  final CollectionReference notesRef =
-      FirebaseFirestore.instance.collection('notes');
-
-  // Create a batch instance
-  WriteBatch batch = FirebaseFirestore.instance.batch();
-
-  try {
-    // Get all notes under the category
-    QuerySnapshot notesSnapshot =
-        await notesRef.where('categoryId', isEqualTo: categoryId).get();
-
-    // Add each note delete operation to the batch
-    for (QueryDocumentSnapshot note in notesSnapshot.docs) {
-      batch.delete(note.reference);
+  Future<bool> updateCategory(
+      {required CategoryModel category, required String id}) async {
+    try {
+      await collectionRef.doc(id).update(category.toMap());
+      print('Category updated successfully for user: ${user!.uid}');
+      return true;
+    } catch (e) {
+      print('Failed to update Category: ${e.toString()}');
+      return false;
     }
+  }
 
-    // Add category delete operation to the batch
-    DocumentReference categoryDocRef = categoriesRef.doc(categoryId);
-    batch.delete(categoryDocRef);
+  Future<void> deleteCategoryAndNotes(String categoryId) async {
+    final CollectionReference categoriesRef =
+        FirebaseFirestore.instance.collection('categories');
+    final CollectionReference notesRef =
+        FirebaseFirestore.instance.collection('notes');
 
-    // Commit the batch
-    await batch.commit();
-    print('Category and all associated notes deleted successfully.');
-  } catch (e) {
-    print('Error deleting category and notes: $e');
+    // Create a batch instance
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    try {
+      // Get all notes under the category
+      QuerySnapshot notesSnapshot =
+          await notesRef.where('categoryId', isEqualTo: categoryId).get();
+
+      // Add each note delete operation to the batch
+      for (QueryDocumentSnapshot note in notesSnapshot.docs) {
+        batch.delete(note.reference);
+      }
+
+      // Add category delete operation to the batch
+      DocumentReference categoryDocRef = categoriesRef.doc(categoryId);
+      batch.delete(categoryDocRef);
+
+      // Commit the batch
+      await batch.commit();
+      print('Category and all associated notes deleted successfully.');
+    } catch (e) {
+      print('Error deleting category and notes: $e');
+    }
   }
 }

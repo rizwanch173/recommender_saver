@@ -12,6 +12,10 @@ class CategoryRepoistry {
   Future<bool> createCategory(CategoryModel category) async =>
       await _service.create(category);
 
+  Future<bool> updateCategory(
+          {required CategoryModel category, required String Id}) async =>
+      await _service.updateCategory(category: category, id: Id);
+
   Future<bool> deleteCategory({required String categoryId}) async =>
       await _service.delete(categoryId: categoryId);
 }

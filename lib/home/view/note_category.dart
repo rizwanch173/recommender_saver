@@ -17,8 +17,8 @@ class NoteCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryCubit, CategoryState>(
       builder: (context, state) {
-        final cubit = BlocProvider.of<CategoryCubit>(context);
-        //  cubit.init();
+        // final cubit = BlocProvider.of<CategoryCubit>(context);
+
         return BlocBuilder<HomeCubit, NoteState>(
           builder: (context, noteState) {
             return Row(
@@ -82,7 +82,6 @@ class NoteCategory extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
-                                  print("noteState");
                                   BlocProvider.of<HomeCubit>(context)
                                       .toggleNoteSort(
                                           isSorted: true,

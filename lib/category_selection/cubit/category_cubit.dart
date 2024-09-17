@@ -37,6 +37,23 @@ class CategoryCubit extends Cubit<CategoryState> {
     return true;
   }
 
+  Future<void> updateLocal(
+      {required int index, required CategoryModel category}) async {
+    if (state is CategoryLoaded) {
+      final currentState = state as CategoryLoaded;
+
+      final List<CategoryModel> categories = List.from(currentState.categories);
+
+      // Update the note at the specific index in both lists
+      categories[index] = category;
+
+      // Emit the updated state
+      emit(CategoryLoaded(categories: categories));
+
+      print("CategoryLoaded update called");
+    }
+  }
+
   Future<List<CategoryModel>> fetchAllCategory() async {
     List<CategoryModel> categories;
 

@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:formz/formz.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/service/note_service.dart';
@@ -188,23 +186,22 @@ class HomeCubit extends Cubit<NoteState> {
 
   Future<void> deleteNote({required String noteId}) async {
     bool isDeleted = await _repository.deleteNote(noteId: noteId);
+
     if (isDeleted) {
-      if (isDeleted) {
-        if (state is NoteLoaded) {
-          final currentState = state as NoteLoaded;
-          final updatedNotes =
-              currentState.notes.where((note) => note.id != noteId).toList();
+      if (state is NoteLoaded) {
+        final currentState = state as NoteLoaded;
+        final updatedNotes =
+            currentState.notes.where((note) => note.id != noteId).toList();
 
-          final updatedSortedNotes = currentState.sortedNotes
-              .where((note) => note.id != noteId)
-              .toList();
+        final updatedSortedNotes = currentState.sortedNotes
+            .where((note) => note.id != noteId)
+            .toList();
 
-          emit(currentState.copyWith(
-              notes: updatedNotes, sortedNotes: updatedSortedNotes));
-        }
-      } else {
-        // Handle failure case if needed
+        emit(currentState.copyWith(
+            notes: updatedNotes, sortedNotes: updatedSortedNotes));
       }
+    } else {
+      // Handle failure case if needed
     }
   }
 

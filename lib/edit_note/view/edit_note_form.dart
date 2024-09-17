@@ -4,7 +4,6 @@ import 'package:formz/formz.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/edit_note/cubit/edit_note_cubit.dart';
 import '../../category_selection/models/category_model.dart';
-import '../../home/cubit/home_cubit.dart';
 
 class EditNoteForm extends StatelessWidget {
   EditNoteForm({super.key, required this.category, required this.index});

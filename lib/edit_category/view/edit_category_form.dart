@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:recommender_saver/category_selection/models/category_model.dart';
 import 'package:recommender_saver/common/dashed_line.dart';
 import 'package:recommender_saver/constants/colors.dart';
-import '../../category_selection/cubit/category_cubit.dart';
-import '../../category_selection/view/category_selection_page.dart';
-import '../cubit/add_category_cubit.dart';
+import 'package:recommender_saver/edit_category/cubit/edit_category_cubit.dart';
 
-class AddCategoryForm extends StatelessWidget {
-  const AddCategoryForm({super.key});
+class EditCategoryForm extends StatelessWidget {
+  EditCategoryForm({super.key, required this.category, required this.index});
+  final CategoryModel category;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddCategoryCubit, AddCategoryState>(
+    return BlocListener<EditCategoryCubit, EditCategoryState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
-          context.read<CategoryCubit>().fetchAllCategory();
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CategorySelection(),
-            ),
-          );
+          Navigator.pop(context);
         } else if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -32,9 +26,9 @@ class AddCategoryForm extends StatelessWidget {
             );
         }
       },
-      child: BlocBuilder<AddCategoryCubit, AddCategoryState>(
+      child: BlocBuilder<EditCategoryCubit, EditCategoryState>(
         builder: (context, state) {
-          final cubit = BlocProvider.of<AddCategoryCubit>(context);
+          final cubit = BlocProvider.of<EditCategoryCubit>(context);
           return Align(
             alignment: const Alignment(0, -1 / 3),
             child: Padding(
@@ -49,7 +43,7 @@ class AddCategoryForm extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'To add new category please fill blew:',
+                        'Please update blew:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -137,7 +131,9 @@ class AddCategoryForm extends StatelessWidget {
                     // ),
                     const SizedBox(height: 25),
                     Align(
-                      child: _AddButton(),
+                      child: _AddButton(
+                        index: index,
+                      ),
                     ),
                   ],
                 ),
@@ -149,42 +145,6 @@ class AddCategoryForm extends StatelessWidget {
     );
   }
 }
-
-// class _nameInput extends StatelessWidget {
-//   final String labelText;
-//   final TextEditingController? controler;
-
-//   const _nameInput({required this.labelText, required this.controler});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.only(left: 5, bottom: 12),
-//           child: Text(
-//             'Please input ${labelText}',
-//             style: TextStyle(
-//               fontWeight: FontWeight.normal,
-//               color: Colors.white,
-//               fontSize: 15,
-//             ),
-//           ),
-//         ),
-//         NoteInputText(
-//           inputkey: '_nameInput_NoteInputText',
-//           labelText: '$labelText',
-//           controller: controler,
-//           onChanged: (value) {
-//             // Handle the change in input
-//           },
-//           validator: ve,
-//         ),
-//       ],
-//     );
-//   }
-// }
 
 class _customInput extends StatelessWidget {
   final String labelText;
@@ -232,10 +192,13 @@ class _customInput extends StatelessWidget {
 }
 
 class _AddButton extends StatelessWidget {
+  final int index;
+
+  const _AddButton({required this.index});
   @override
   Widget build(BuildContext context) {
     final isInProgress = context.select(
-      (AddCategoryCubit cubit) => cubit.state.status.isInProgress,
+      (EditCategoryCubit cubit) => cubit.state.status.isInProgress,
     );
 
     if (isInProgress)
@@ -248,9 +211,11 @@ class _AddButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () {
-        context.read<AddCategoryCubit>().addFormSubmitted();
+        print("addFormSubmitted(index);");
+        print(isInProgress);
+        context.read<EditCategoryCubit>().addFormSubmitted(index);
       },
-      child: Text('Create'),
+      child: Text('Update'),
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
