@@ -25,7 +25,7 @@ class GlassButton extends StatelessWidget {
                   Colors.white.withOpacity(0.2), // Semi-transparent background
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: Colors.purple.withOpacity(0.5),
+                color: secondryColor.withOpacity(0.5),
                 width: 1.0,
               ),
             ),

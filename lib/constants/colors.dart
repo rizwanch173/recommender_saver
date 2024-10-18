@@ -13,5 +13,5 @@ List<Color> backgroundColors = [
   const Color(0xFFFFF3CD), // pale orange
 ];
 
-const Color primaryColor = Color(0xFF000000);
-const Color secondryColor = Colors.purple;
+const Color primaryColor = Color.fromARGB(255, 52, 48, 48);
+const Color secondryColor = Color(0xfffbe293);

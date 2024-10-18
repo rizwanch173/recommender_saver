@@ -136,7 +136,7 @@ class CategorySelectionWidget extends StatelessWidget {
                                           child: Text(
                                             'Cancel',
                                             style:
-                                                TextStyle(color: secondryColor),
+                                                TextStyle(color: Colors.black),
                                           ),
                                           onPressed: () {
                                             Navigator.of(context)

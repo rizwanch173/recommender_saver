@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/edit_note/cubit/edit_note_cubit.dart';
+import 'package:recommender_saver/home/cubit/home_cubit.dart';
 import '../../category_selection/models/category_model.dart';
 
 class EditNoteForm extends StatelessWidget {
@@ -18,6 +19,12 @@ class EditNoteForm extends StatelessWidget {
           // context.read<HomeCubit>().updateLocal(index: index, note: null, );
 
           Navigator.pop(context);
+
+          // final updatedNote = context.select(
+          //   (EditNoteCubit cubit) => cubit.updatedNote,
+          // );
+
+          // Navigator.of(context).pop(updatedNote);
         } else if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -130,17 +137,17 @@ class _customInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 12),
-          child: Text(
-            'Please input $labelText',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 5, bottom: 12),
+        //   child: Text(
+        //     'Please input $labelText',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.normal,
+        //       color: Colors.white,
+        //       fontSize: 15,
+        //     ),
+        //   ),
+        // ),
         NoteInputText(
           inputkey: '__nameDetail01_NoteInputText',
           labelText: '$labelText',
@@ -181,8 +188,8 @@ class _AddButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
-        textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        textStyle: TextStyle(color: Colors.black),
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),

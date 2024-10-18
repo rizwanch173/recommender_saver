@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/service/note_service.dart';
@@ -31,6 +32,13 @@ class HomeCubit extends Cubit<NoteState> {
 
     print("stop state close");
     return Future.value();
+  }
+
+  Future<void> logout() {
+    // emit(NoteInitial());
+    print("logout state close");
+    HomeCubit().close();
+    return super.close();
   }
 
   Future<void> updateLocal(
@@ -180,7 +188,11 @@ class HomeCubit extends Cubit<NoteState> {
   Future<List<NoteModel>> fetchAllNotes() async {
     List<NoteModel> noteX;
     noteX = await _repository.fetchAllNotes();
-    emit(NoteLoaded(notes: noteX, sortedNotes: noteX));
+
+    if (!isClosed) {
+      emit(NoteLoaded(notes: noteX, sortedNotes: noteX));
+      print("fetchAllNotesG ${noteX.length}");
+    }
     return noteX;
   }
 
@@ -227,13 +239,15 @@ class HomeCubit extends Cubit<NoteState> {
 
   Future<void> fetchNotesForUser() async {
     try {
-      emit(NoteLoading());
-      final user = _auth.currentUser;
-      if (user == null) throw Exception("User not signed in");
-      List<NoteModel> notes = await _repository.fetchAllNotes();
-      print("--------------------------");
-      print(notes.length);
-      emit(NoteLoaded(notes: notes, sortedNotes: notes));
+      if (!isClosed) {
+        emit(NoteLoading());
+        final user = _auth.currentUser;
+        if (user == null) throw Exception("User not signed in");
+        List<NoteModel> notes = await _repository.fetchAllNotes();
+        print("--------------------------");
+        print(notes.length);
+        emit(NoteLoaded(notes: notes, sortedNotes: notes));
+      }
     } catch (e) {
       emit(NoteError('Failed to fetch notes: $e'));
     }

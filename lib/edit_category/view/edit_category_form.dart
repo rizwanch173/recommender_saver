@@ -43,7 +43,7 @@ class EditCategoryForm extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Please update blew:',
+                        'Please update the following:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -105,7 +105,7 @@ class EditCategoryForm extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'The Recommender & Additional notes are fixed',
+                        'The Recommender & Additional notes are fixed.',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -165,17 +165,17 @@ class _customInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 12),
-          child: Text(
-            'Please input $labelText',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 5, bottom: 12),
+        //   child: Text(
+        //     'Please input $labelText',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.normal,
+        //       color: Colors.white,
+        //       fontSize: 15,
+        //     ),
+        //   ),
+        // ),
         NoteInputText(
           inputkey: '__nameDetail01_NoteInputText',
           validator: validator,
@@ -219,8 +219,8 @@ class _AddButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
-        textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        textStyle: TextStyle(color: Colors.black),
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),

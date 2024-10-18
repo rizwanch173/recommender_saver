@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:recommender_saver/home/cubit/home_cubit.dart';
+import 'package:restart_app/restart_app.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
@@ -36,6 +38,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Future<void> _onLogoutRequested(
       AppLogoutRequested event, Emitter<AppState> emit) async {
     // Clear Firestore persistence
+
     unawaited(_authenticationRepository.logOut());
   }
 

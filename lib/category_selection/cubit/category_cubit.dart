@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:recommender_saver/common/firebase_lib.dart';
 import 'package:recommender_saver/data/service/category_service.dart';
 import 'package:recommender_saver/repositories/category_repoistry.dart';
 import 'package:uuid/uuid.dart';
@@ -37,6 +38,10 @@ class CategoryCubit extends Cubit<CategoryState> {
     return true;
   }
 
+  Future<void> logout() {
+    return super.close();
+  }
+
   Future<void> updateLocal(
       {required int index, required CategoryModel category}) async {
     if (state is CategoryLoaded) {
@@ -59,7 +64,9 @@ class CategoryCubit extends Cubit<CategoryState> {
 
     categories = await _repository.fetchAllCategory();
 
-    emit(CategoryLoaded(categories: categories));
+    if (!isClosed) {
+      emit(CategoryLoaded(categories: categories));
+    }
 
     return categories;
   }

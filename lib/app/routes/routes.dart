@@ -13,6 +13,7 @@ List<Page<dynamic>> onGenerateAppViewPages(
 ) {
   switch (state) {
     case AppStatus.authenticated:
+      HomeCubit().init();
       return [HomePage.page()];
     case AppStatus.unauthenticated:
       return [LoginPage.page()];
@@ -57,7 +58,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
-            child: HomePage(),
+            child: HomePage(
+              isChange: true,
+            ),
           ),
         );
       case "/login":

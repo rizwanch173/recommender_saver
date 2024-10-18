@@ -34,12 +34,31 @@ class CategoryService {
   }
 
   Future<List<CategoryModel>> fetch() async {
-    QuerySnapshot querySnapshot = await collectionRef.get();
-    List<CategoryModel> noteX;
-    noteX = querySnapshot.docs.map((doc) {
-      return CategoryModel.fromFirestore(doc);
-    }).toList();
-    return noteX;
+    try {
+      // Attempt to get the documents from Firestore
+      QuerySnapshot querySnapshot = await collectionRef.get();
+
+      // Map the documents to your CategoryModel and return the list
+      List<CategoryModel> noteX = querySnapshot.docs.map((doc) {
+        return CategoryModel.fromFirestore(doc);
+      }).toList();
+
+      return noteX;
+    } on FirebaseException catch (e) {
+      // Check for Firestore permission error
+      if (e.code == 'permission-denied') {
+        print('Permission denied: ${e.message}');
+        // Handle permission-denied error (e.g., show message or return empty list)
+      } else {
+        print('FirebaseException occurred: ${e.message}');
+        // Handle other Firestore errors
+      }
+      return []; // Return an empty list in case of an error
+    } catch (e) {
+      // Handle any non-Firebase errors
+      print('An unexpected error occurred: $e');
+      return []; // Return an empty list in case of a general error
+    }
   }
 
   Future<bool> delete({required String categoryId}) async {

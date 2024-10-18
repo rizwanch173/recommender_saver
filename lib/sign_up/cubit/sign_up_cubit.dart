@@ -73,8 +73,9 @@ class SignUpCubit extends Cubit<SignUpState> {
         email: state.email.value,
         password: state.password.value,
       );
+      await copyDefaultCategoriesToUser(userCredential!.user!.uid);
+
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-      unawaited(copyDefaultCategoriesToUser(userCredential!.user!.uid));
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       emit(
         state.copyWith(

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 
 part 'login_state.dart';
 
@@ -32,15 +33,23 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
+  void changeSubmittedStatus({required bool isSubmitted}) {
+    emit(LoginState(isSubmitted: isSubmitted));
+  }
+
   Future<void> logInWithCredentials() async {
-    if (!state.isValid) return;
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    print("tried");
+    // if (!state.isValid) return;
+    emit(state.copyWith(
+        status: FormzSubmissionStatus.inProgress, isSubmitted: true));
+    print("tried");
     try {
+      print("tried");
       await _authenticationRepository.logInWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
       );
-      await FirebaseFirestore.instance.clearPersistence();
+
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(
@@ -49,8 +58,13 @@ class LoginCubit extends Cubit<LoginState> {
           status: FormzSubmissionStatus.failure,
         ),
       );
-    } catch (_) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: e.toString(),
+          status: FormzSubmissionStatus.failure,
+        ),
+      );
     }
   }
 

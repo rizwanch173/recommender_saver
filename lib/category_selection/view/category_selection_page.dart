@@ -6,7 +6,6 @@ import '../../add_category/views/add_category_page.dart';
 import '../../add_note/view/add_note_page.dart';
 import '../../common/category_selection_widget.dart';
 import '../../common/glass_back_button.dart';
-import '../../common/glass_floating_action_button.dart';
 
 class CategorySelection extends StatelessWidget {
   const CategorySelection({super.key});
@@ -35,6 +34,13 @@ class CategorySelection extends StatelessWidget {
                         Navigator.of(context).pop();
                       },
                     ),
+                    GlassButton(
+                      icon: Icons.add,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push<void>(AddCategoryPage.route());
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -43,11 +49,11 @@ class CategorySelection extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Text(
-                    "Please select the category to create note",
+                    "Choose Your Note Type.",
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -90,12 +96,12 @@ class CategorySelection extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: GlassFloatingActionButton(
-        icon: Icons.add,
-        onPressed: () {
-          Navigator.of(context).push<void>(AddCategoryPage.route());
-        },
-      ),
+      // floatingActionButton: GlassFloatingActionButton(
+      //   icon: Icons.add,
+      //   onPressed: () {
+      //     Navigator.of(context).push<void>(AddCategoryPage.route());
+      //   },
+      // ),
     );
   }
 }

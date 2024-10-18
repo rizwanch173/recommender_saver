@@ -17,11 +17,11 @@ class SignUpPage extends StatelessWidget {
       backgroundColor: primaryColor,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white,
+          color: Colors.black,
         ),
         title: const Text(
           'Sign Up',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: secondryColor,
       ),

@@ -49,7 +49,7 @@ class AddCategoryForm extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'To add new category please fill blew:',
+                        'Please fill out the following:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -59,11 +59,11 @@ class AddCategoryForm extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     _customInput(
-                      labelText: 'Categoey name',
+                      labelText: 'Category name',
                       controler: cubit.categoryName,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Categoey name is required';
+                          return 'Category name is required';
                         }
                         if (value.length < 2) {
                           return 'Name too short';
@@ -205,17 +205,17 @@ class _customInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 12),
-          child: Text(
-            'Please input $labelText',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 5, bottom: 12),
+        //   child: Text(
+        //     'Please input $labelText',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.normal,
+        //       color: Colors.white,
+        //       fontSize: 15,
+        //     ),
+        //   ),
+        // ),
         NoteInputText(
           inputkey: '__nameDetail01_NoteInputText',
           validator: validator,
@@ -254,8 +254,8 @@ class _AddButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
-        textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        textStyle: TextStyle(color: Colors.black),
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -337,7 +337,7 @@ class NoteInputText extends StatelessWidget {
               color: secondryColor), // Replace secondryColor with actual color
         ),
         labelText: labelText == 'notes' ? '' : labelText,
-        hintText: labelText,
+        // hintText: labelText,
         helperText: helperText,
         errorText: errorText,
         labelStyle: const TextStyle(

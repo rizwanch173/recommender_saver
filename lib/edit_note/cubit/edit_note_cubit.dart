@@ -27,6 +27,8 @@ class EditNoteCubit extends Cubit<EditNoteState> {
   late String categoryName;
   late String noteId;
 
+  NoteModel? updatedNote;
+
   Future<void> init({
     required String categoryId,
     required String categoryName,
@@ -67,6 +69,7 @@ class EditNoteCubit extends Cubit<EditNoteState> {
     try {
       await _repository.updateNote(note: note);
       noteCubit.updateLocal(note: note, sortedNotesIndex: index);
+      updatedNote = note;
       emit(state.copyWith(status: FormzSubmissionStatus.success));
       return note;
     } catch (e) {

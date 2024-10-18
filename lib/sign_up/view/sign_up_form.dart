@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recommender_saver/app/bloc/app_bloc.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/sign_up/sign_up.dart';
 import 'package:formz/formz.dart';
@@ -12,6 +13,9 @@ class SignUpForm extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
+          context.read<AppBloc>().add(
+                const AppLogoutRequested(),
+              );
           Navigator.of(context).pop();
         } else if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
@@ -257,7 +261,7 @@ class _SignUpButton extends StatelessWidget {
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
         textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),

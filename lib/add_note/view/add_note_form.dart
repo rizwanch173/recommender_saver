@@ -20,7 +20,9 @@ class AddNoteForm extends StatelessWidget {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomePage(),
+              builder: (context) => HomePage(
+                isChange: true,
+              ),
             ),
           );
         } else if (state.status.isFailure) {
@@ -36,9 +38,9 @@ class AddNoteForm extends StatelessWidget {
         builder: (context, state) {
           final cubit = BlocProvider.of<AddNoteCubit>(context);
           return Align(
-            alignment: const Alignment(0, -1 / 3),
+            alignment: const Alignment(0, -1 / 4),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +71,7 @@ class AddNoteForm extends StatelessWidget {
                     labelText: category.Note,
                     controler: cubit.noteControler,
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 60),
                   Align(
                     child: _AddButton(),
                   ),
@@ -133,17 +135,17 @@ class _customInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 12),
-          child: Text(
-            'Please input $labelText',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.white,
-              fontSize: 15,
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 5, bottom: 12),
+        //   child: Text(
+        //     'Please input $labelText',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.normal,
+        //       color: Colors.white,
+        //       fontSize: 15,
+        //     ),
+        //   ),
+        // ),
         NoteInputText(
           inputkey: '__nameDetail01_NoteInputText',
           labelText: '$labelText',
@@ -181,8 +183,8 @@ class _AddButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
-        textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        textStyle: TextStyle(color: Colors.black),
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -261,7 +263,7 @@ class NoteInputText extends StatelessWidget {
               color: secondryColor), // Replace secondryColor with actual color
         ),
         labelText: labelText == 'notes' ? '' : labelText,
-        hintText: labelText,
+        // hintText: labelText,
         helperText: helperText,
         errorText: errorText,
         labelStyle: const TextStyle(

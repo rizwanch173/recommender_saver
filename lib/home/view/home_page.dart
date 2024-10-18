@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:rebirth/rebirth.dart';
 import 'package:recommender_saver/app/app.dart';
 import 'package:recommender_saver/constants/colors.dart';
+import 'package:recommender_saver/drawer_category/drawer_category_page.dart';
 import 'package:recommender_saver/home/view/note_category.dart';
 import 'package:recommender_saver/home/view/note_detail.dart';
 import '../../category_selection/category.dart';
@@ -11,17 +13,88 @@ import '../cubit/home_cubit.dart';
 import '../model/notes_model.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key, required this.isChange});
 
-  static Page<void> page() => const MaterialPage<void>(child: HomePage());
-
+  static Page<void> page() => MaterialPage<void>(
+        child: HomePage(
+          isChange: true,
+        ),
+      );
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isChange;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
+      key: _scaffoldKey,
+      drawer: Drawer(
+        width: 200,
+        backgroundColor: primaryColor,
+        elevation: 0,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // No profile or header, just the menu options
+              ListTile(
+                leading: Icon(
+                  Icons.category,
+                  color: Colors.white,
+                ),
+                title: Text(
+                  'Categories',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DrawerCategoryPage()),
+                  );
+                },
+              ),
+              // Divider(), // Optional: To separate the two buttons visually
+              ListTile(
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+                title: Text(
+                  'Logout',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () async {
+                  // context.read<HomeCubit>().logout();
+                  // context.read<CategoryCubit>().logout();
+
+                  await Future.delayed(Duration(microseconds: 500));
+
+                  context.read<AppBloc>().add(
+                        const AppLogoutRequested(),
+                      );
+                  WidgetRebirth.createRebirth(context: context);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: BlocBuilder<HomeCubit, NoteState>(
         builder: (context, state) {
           final cubit = BlocProvider.of<HomeCubit>(context);
+          if (isChange) {
+            print({"fetchAllNotesX"});
+            context.read<HomeCubit>().fetchAllNotes();
+            context.read<CategoryCubit>().fetchAllCategory();
+            isChange = false;
+          }
+
           return Padding(
             padding: const EdgeInsets.fromLTRB(16, 50, 16, 0),
             child: Column(
@@ -29,34 +102,53 @@ class HomePage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    IconButton(
+                      icon: HamburgerMenuIcon(),
+                      onPressed: () {
+                        // Open the drawer when the icon is pressed
+                        _scaffoldKey.currentState?.openDrawer();
+                      },
+                    ),
+
                     const Text(
                       'My notes',
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        // cubit.toggleNotesLoadedStyle();
-                        // print(state);
-
-                        // setState(() {
-                        //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
-                        // });
-
-                        context.read<AppBloc>().add(const AppLogoutRequested());
-                      },
-                      padding: const EdgeInsets.all(0),
-                      icon: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade800.withOpacity(.8),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(
-                          Icons.exit_to_app,
-                          color: Colors.white,
-                        ),
-                      ),
+                    SizedBox(
+                      width: 40,
                     )
+                    // IconButton(
+                    //   onPressed: () async {
+                    //     // cubit.toggleNotesLoadedStyle();
+                    //     // print(state);
+
+                    //     // setState(() {
+                    //     //   filteredNotes = sortNotesByModifiedTime(filteredNotes);
+                    //     // });
+                    //     context.read<HomeCubit>().logout();
+
+                    //     await Future.delayed(Duration(microseconds: 500));
+
+                    //     context.read<AppBloc>().add(
+                    //           const AppLogoutRequested(),
+                    //         );
+
+                    //     // Restart the app
+                    //     //  RestartWidget.restartApp(context);
+                    //   },
+                    //   padding: const EdgeInsets.all(0),
+                    //   icon: Container(
+                    //     width: 40,
+                    //     height: 40,
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.grey.shade800.withOpacity(.8),
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     child: const Icon(
+                    //       Icons.exit_to_app,
+                    //       color: Colors.white,
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
                 // Avatar(photo: user.photo),
@@ -137,6 +229,8 @@ class HomePage extends StatelessWidget {
                                         homeCubit: cubit,
                                         index: index,
                                         notesf: state.sortedNotes[index],
+                                        parentName:
+                                            state.sortedNotes[index].parentName,
                                       ),
                                     ),
                                   );
@@ -190,18 +284,41 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: secondryColor.withOpacity(0.5),
-          width: 1,
-        ),
-        color: Color(0xff262626),
         borderRadius: BorderRadius.only(
           topRight: index % 2 == 0 ? Radius.circular(30) : Radius.circular(0),
           topLeft: index % 2 != 0 ? Radius.circular(30) : Radius.circular(0),
           bottomRight: Radius.circular(30),
           bottomLeft: Radius.circular(30),
         ),
+        border: Border.all(
+          color: secondryColor.withOpacity(0.5),
+          width: 1,
+        ),
+        color: Color(0xff262626),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft, // 45° angle
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white, // white at the beginning
+            Color(0xFFFBE293), // #fbe293 color
+            Color(0xFFFFC817), // #ffc817 color
+          ],
+        ),
       ),
+
+      // decoration: BoxDecoration(
+      //   border: Border.all(
+      //     color: secondryColor.withOpacity(0.5),
+      //     width: 1,
+      //   ),
+      //   color: Color(0xff262626),
+      //   borderRadius: BorderRadius.only(
+      //     topRight: index % 2 == 0 ? Radius.circular(30) : Radius.circular(0),
+      //     topLeft: index % 2 != 0 ? Radius.circular(30) : Radius.circular(0),
+      //     bottomRight: Radius.circular(30),
+      //     bottomLeft: Radius.circular(30),
+      //   ),
+      // ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Center(
@@ -233,7 +350,7 @@ class HomeWidget extends StatelessWidget {
                     child: Text(
                       '${notes.parentName}',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -248,7 +365,7 @@ class HomeWidget extends StatelessWidget {
                   Text(
                     'Name:',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 12,
                       fontStyle: FontStyle.italic,
                     ),
@@ -257,7 +374,7 @@ class HomeWidget extends StatelessWidget {
                     child: Text(
                       '${notes.name}',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 12,
                         fontStyle: FontStyle.normal,
                       ),
@@ -272,7 +389,7 @@ class HomeWidget extends StatelessWidget {
                   Text(
                     'Recommender:',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 12,
                       fontStyle: FontStyle.italic,
                     ),
@@ -281,7 +398,7 @@ class HomeWidget extends StatelessWidget {
                     child: Text(
                       '${notes.recommender}',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 12,
                         fontStyle: FontStyle.normal,
                       ),
@@ -302,7 +419,7 @@ class HomeWidget extends StatelessWidget {
                 child: Text(
                   DateFormat('MMM d, yyyy, HH:mm').format(notes.createdAt),
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.black.withOpacity(0.6),
                     fontSize: 10,
                   ),
                 ),
@@ -335,6 +452,35 @@ class ThreeSideCurvedContainer extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
+    );
+  }
+}
+
+class HamburgerMenuIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 15, // Smallest line
+          height: 3,
+          color: Colors.white,
+        ),
+        SizedBox(height: 6), // Space between lines
+        Container(
+          width: 20, // Medium line
+          height: 3,
+          color: Colors.white,
+        ),
+        SizedBox(height: 6),
+        Container(
+          width: 25, // Largest line
+          height: 3,
+          color: Colors.white,
+        ),
+      ],
     );
   }
 }

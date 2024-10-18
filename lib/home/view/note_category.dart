@@ -17,8 +17,6 @@ class NoteCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryCubit, CategoryState>(
       builder: (context, state) {
-        // final cubit = BlocProvider.of<CategoryCubit>(context);
-
         return BlocBuilder<HomeCubit, NoteState>(
           builder: (context, noteState) {
             return Row(
@@ -99,7 +97,11 @@ class NoteCategory extends StatelessWidget {
                               );
                             },
                           ),
-                        ),
+                        )
+                      else
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        )
                     ],
                   ),
                 ),

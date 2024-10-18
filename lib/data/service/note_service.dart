@@ -26,6 +26,7 @@ class NoteService {
       await userNotesRef.add(note.toMap());
       print('Note created successfully for user: ${user!.uid}');
     } catch (e) {
+      print('Went wrong: ${user!.uid}');
       print(e.toString());
     }
   }

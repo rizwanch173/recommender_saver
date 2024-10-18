@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
         backgroundColor: secondryColor,
         title: const Text(
           'Login',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       ),
       body: Padding(

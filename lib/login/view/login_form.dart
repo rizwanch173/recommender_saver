@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/login/login.dart';
 import 'package:recommender_saver/sign_up/sign_up.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +15,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
-        if (state.status.isFailure) {
+        if (state.status.isFailure && state.isSubmitted) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -22,6 +23,9 @@ class LoginForm extends StatelessWidget {
                 content: Text(state.errorMessage ?? 'Authentication Failure'),
               ),
             );
+          context.read<LoginCubit>().changeSubmittedStatus(isSubmitted: false);
+          print("state.isSubmitted");
+          print(state.isSubmitted);
         }
       },
       child: Align(
@@ -116,7 +120,6 @@ class _EmailInput extends StatelessWidget {
               color: secondryColor), // Replace secondryColor with actual color
         ),
         labelText: 'email',
-        hintText: 'email',
         helperText: '',
         errorText: displayError != null ? 'invalid email' : null,
         labelStyle: const TextStyle(
@@ -211,7 +214,10 @@ class _LoginButton extends StatelessWidget {
       (LoginCubit cubit) => cubit.state.status.isInProgress,
     );
 
-    if (isInProgress) return const CircularProgressIndicator();
+    if (isInProgress)
+      return const CircularProgressIndicator(
+        color: Colors.white,
+      );
 
     final isValid = context.select(
       (LoginCubit cubit) => cubit.state.isValid,
@@ -227,7 +233,7 @@ class _LoginButton extends StatelessWidget {
         padding: EdgeInsets.only(left: 50, right: 50),
         backgroundColor: secondryColor,
         textStyle: TextStyle(color: Colors.white),
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -282,7 +288,7 @@ class _SignUpButton extends StatelessWidget {
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
       child: Text(
         'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

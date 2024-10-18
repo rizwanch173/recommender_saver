@@ -9,19 +9,22 @@ import '../../common/animated_bar.dart';
 import '../../common/glass_back_button.dart';
 import '../../constants/colors.dart';
 import '../model/notes_model.dart';
+import 'package:share_plus/share_plus.dart';
 
 // ignore: must_be_immutable
 class NoteDetailPage extends StatelessWidget {
   final HomeCubit homeCubit;
-  final NoteModel notesf;
+  NoteModel notesf;
   final int index;
   late CategoryModel? category;
+  final String parentName;
 
   NoteDetailPage({
     super.key,
     required this.homeCubit,
     required this.index,
     required this.notesf,
+    required this.parentName,
   });
   @override
   Widget build(BuildContext context) {
@@ -34,8 +37,10 @@ class NoteDetailPage extends StatelessWidget {
           create: (context) => homeCubit,
           child: BlocBuilder<HomeCubit, NoteState>(
             builder: (context, noteState) {
+              //  print(noteState.notes[index].id)
               //int index = (noteState as NoteLoaded).sortedNotes.indexOf(notesf);
               noteState as NoteLoaded;
+
               return noteState.sortedNotes.length < 1
                   ? CircularProgressIndicator()
                   : Column(
@@ -55,7 +60,7 @@ class NoteDetailPage extends StatelessWidget {
                               },
                             ),
                             Text(
-                              noteState.sortedNotes[index].parentName,
+                              parentName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -91,8 +96,9 @@ class NoteDetailPage extends StatelessWidget {
                                   children: [
                                     GlassButton(
                                       icon: Icons.delete,
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.of(context).pop();
+
                                         BlocProvider.of<HomeCubit>(context)
                                             .deleteNote(
                                                 noteId:
@@ -104,8 +110,8 @@ class NoteDetailPage extends StatelessWidget {
                                     ),
                                     GlassButton(
                                       icon: Icons.edit,
-                                      onPressed: () {
-                                        Navigator.of(context).push(
+                                      onPressed: () async {
+                                        await Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) => EditNotePage(
                                               category: category!,
@@ -122,7 +128,10 @@ class NoteDetailPage extends StatelessWidget {
                                     ),
                                     GlassButton(
                                       icon: Icons.ios_share_outlined,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Share.share(
+                                            'Budapest Hotel \n Quirky characters, colorful cinematography');
+                                      },
                                     ),
                                   ],
                                 ),
@@ -135,9 +144,10 @@ class NoteDetailPage extends StatelessWidget {
                             if (state is CategoryLoaded)
                               try {
                                 category = state.categories.firstWhere(
-                                    (category) =>
-                                        category.parentId ==
-                                        noteState.sortedNotes[index].parentId);
+                                  (category) =>
+                                      category.parentId ==
+                                      noteState.sortedNotes[index].parentId,
+                                );
 
                                 print(category?.patent_name);
                               } catch (e) {
@@ -148,10 +158,13 @@ class NoteDetailPage extends StatelessWidget {
                                   top: 80, left: 20, right: 20),
                               child: Column(
                                 children: [
-                                  _NoteDetailWidget(
-                                    note: noteState.sortedNotes[index],
-                                    category: category!,
-                                  ),
+                                  index < noteState.sortedNotes.length
+                                      ? _NoteDetailWidget(
+                                          note: noteState.sortedNotes[index],
+                                          category: category!,
+                                        )
+                                      : SizedBox()
+
                                   // BlocBuilder<HomeCubit, NoteState>(
                                   //   builder: (context, state) {
                                   //     if (state is NoteLoaded) {
