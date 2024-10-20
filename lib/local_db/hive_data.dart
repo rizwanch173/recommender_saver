@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:recommender_saver/hive/notes.dart';
-import 'package:recommender_saver/hive/task.dart';
 
 class HiveDataStore {
   static const boxName = "notes";

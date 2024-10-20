@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/forget_password.dart';
 import 'package:recommender_saver/login/login.dart';
 import 'package:recommender_saver/sign_up/sign_up.dart';
@@ -221,9 +220,9 @@ class _LoginButton extends StatelessWidget {
         color: Colors.white,
       );
 
-    final isValid = context.select(
-      (LoginCubit cubit) => cubit.state.isValid,
-    );
+    // final isValid = context.select(
+    //   (LoginCubit cubit) => cubit.state.isValid,
+    // );
 
     return ElevatedButton(
       key: const Key('loginForm_continue_raisedButton'),
@@ -241,20 +240,6 @@ class _LoginButton extends StatelessWidget {
         ),
         elevation: 4.0,
       ),
-    );
-
-    return ElevatedButton(
-      key: const Key('loginForm_continue_raisedButton'),
-      style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          backgroundColor: secondryColor,
-          foregroundColor: Colors.amber),
-      onPressed: isValid
-          ? () => context.read<LoginCubit>().logInWithCredentials()
-          : null,
-      child: const Text('LOGIN'),
     );
   }
 }
@@ -284,7 +269,6 @@ class _GoogleLoginButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),

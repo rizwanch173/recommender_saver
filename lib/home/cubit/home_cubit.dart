@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:recommender_saver/category_selection/cubit/category_cubit.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/service/note_service.dart';
@@ -26,6 +25,7 @@ class HomeCubit extends Cubit<NoteState> {
   }
 
   @override
+  // ignore: must_call_super
   Future<void> close() {
     // Perform any cleanup operations here
     // init();

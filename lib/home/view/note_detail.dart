@@ -130,7 +130,7 @@ class NoteDetailPage extends StatelessWidget {
                                       icon: Icons.ios_share_outlined,
                                       onPressed: () {
                                         Share.share(
-                                            'Budapest Hotel \n Quirky characters, colorful cinematography');
+                                            "${noteState.sortedNotes[index].name} \n ${noteState.sortedNotes[index].detail01} \n ${noteState.sortedNotes[index].detail02} \n ${noteState.sortedNotes[index].recommender} \n ${noteState.sortedNotes[index].notes}");
                                       },
                                     ),
                                   ],

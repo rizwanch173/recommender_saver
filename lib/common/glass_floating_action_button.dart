@@ -29,7 +29,7 @@ class GlassFloatingActionButton extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: secondryColor.withOpacity(0.3),
                   width: 4,
                 ),
                 gradient: LinearGradient(
@@ -52,7 +52,6 @@ class GlassFloatingActionButton extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: secondryColor.withOpacity(0.5),
                 ),
                 child: Center(
                   child: Icon(

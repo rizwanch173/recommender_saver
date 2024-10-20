@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:intl/intl.dart';
-import 'package:rebirth/rebirth.dart';
 import 'package:recommender_saver/app/app.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/drawer_category/drawer_category_page.dart';
@@ -13,6 +12,7 @@ import '../../common/glass_floating_action_button.dart';
 import '../cubit/home_cubit.dart';
 import '../model/notes_model.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatelessWidget {
   HomePage({super.key, required this.isChange});
 
@@ -118,9 +118,19 @@ class HomePage extends StatelessWidget {
                       'My notes',
                       style: TextStyle(fontSize: 30, color: Colors.white),
                     ),
+                    // SizedBox(
+                    //   width: 40,
+                    // ),
                     SizedBox(
-                      width: 40,
-                    )
+                      height: 45,
+                      child: GlassFloatingActionButton(
+                        icon: Icons.add,
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push<void>(CategorySelection.route());
+                        },
+                      ),
+                    ),
                     // IconButton(
                     //   onPressed: () async {
                     //     // cubit.toggleNotesLoadedStyle();
@@ -265,12 +275,12 @@ class HomePage extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: GlassFloatingActionButton(
-        icon: Icons.add,
-        onPressed: () {
-          Navigator.of(context).push<void>(CategorySelection.route());
-        },
-      ),
+      // floatingActionButton: GlassFloatingActionButton(
+      //   icon: Icons.add,
+      //   onPressed: () {
+      //     Navigator.of(context).push<void>(CategorySelection.route());
+      //   },
+      // ),
     );
   }
 }
