@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:intl/intl.dart';
 import 'package:rebirth/rebirth.dart';
 import 'package:recommender_saver/app/app.dart';
@@ -69,15 +70,18 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  // context.read<HomeCubit>().logout();
-                  // context.read<CategoryCubit>().logout();
+                  context.read<HomeCubit>().logout();
+                  context.read<CategoryCubit>().logout();
 
-                  await Future.delayed(Duration(microseconds: 500));
+                  await Future.delayed(
+                    Duration(microseconds: 500),
+                  );
 
                   context.read<AppBloc>().add(
                         const AppLogoutRequested(),
                       );
-                  WidgetRebirth.createRebirth(context: context);
+                  // WidgetRebirth.createRebirth(context: context);
+                  Phoenix.rebirth(context);
                   Navigator.pop(context);
                 },
               ),

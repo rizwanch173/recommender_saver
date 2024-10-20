@@ -4,7 +4,6 @@ import 'package:recommender_saver/common/glass_back_button.dart';
 import 'package:recommender_saver/constants/colors.dart';
 import 'package:recommender_saver/drawer_category/drawer_note_category.dart';
 import 'package:recommender_saver/home/cubit/home_cubit.dart';
-import 'package:recommender_saver/home/view/note_category.dart';
 
 class DrawerCategoryPage extends StatelessWidget {
   const DrawerCategoryPage({super.key});

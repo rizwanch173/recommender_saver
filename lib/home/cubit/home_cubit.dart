@@ -37,6 +37,7 @@ class HomeCubit extends Cubit<NoteState> {
   Future<void> logout() {
     // emit(NoteInitial());
     print("logout state close");
+    emit(NoteInitial());
     HomeCubit().close();
     return super.close();
   }

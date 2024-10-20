@@ -39,6 +39,8 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   Future<void> logout() {
+    emit(CategoryInitial());
+    CategoryCubit().close();
     return super.close();
   }
 

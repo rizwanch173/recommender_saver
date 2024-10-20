@@ -39,11 +39,26 @@ class CategoryService {
       QuerySnapshot querySnapshot = await collectionRef.get();
 
       // Map the documents to your CategoryModel and return the list
-      List<CategoryModel> noteX = querySnapshot.docs.map((doc) {
+      List<CategoryModel> categories = querySnapshot.docs.map((doc) {
         return CategoryModel.fromFirestore(doc);
       }).toList();
 
-      return noteX;
+      // Use Firestore's .count() method to get the note count for each category
+      await Future.forEach(categories, (CategoryModel category) async {
+        AggregateQuerySnapshot noteCountSnapshot = await collectionRefNotes
+            .where('id',
+                isEqualTo: category
+                    .parentId) // Use 'parentId' from notes, which is the 'id' of category
+            .count()
+            .get();
+
+        print("cont of ${category.patent_name} is ${noteCountSnapshot.count!}");
+
+        // Update the note count for each category
+        category.updateNoteCount(noteCountSnapshot.count!);
+      });
+
+      return categories;
     } on FirebaseException catch (e) {
       // Check for Firestore permission error
       if (e.code == 'permission-denied') {

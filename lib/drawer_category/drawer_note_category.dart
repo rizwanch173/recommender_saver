@@ -83,30 +83,30 @@ class DrawerNoteCategory extends StatelessWidget {
                             ),
                           ),
                           child: Center(
-                            child: Text(
-                              '${state.categories[index].patent_name}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.normal,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${state.categories[index].patent_name}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.normal,
+                                  ),
+                                ),
+                                Text(
+                                  '${state.categories[index].noteCount}',
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.8),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                    fontStyle: FontStyle.normal,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      );
-
-                      GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<HomeCubit>(context).toggleNoteSort(
-                              isSorted: true,
-                              selectedId: state.categories[index].parentId);
-                          print(state.categories[index].parentId);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: CategoryButton(
-                            category: state.categories[index],
                           ),
                         ),
                       );

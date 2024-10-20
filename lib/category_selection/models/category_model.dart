@@ -22,6 +22,8 @@ class CategoryModel {
   final String patent_name;
   @HiveField(8)
   final String parentId;
+  @HiveField(9)
+  int noteCount;
 
   // Convert a CategoryModel into a Map
   Map<String, dynamic> toMap() {
@@ -38,16 +40,18 @@ class CategoryModel {
   }
 
   // Constructor
-  CategoryModel(
-      {required this.patent_name,
-      required this.id,
-      required this.name,
-      required this.detail_01,
-      required this.detail_02,
-      required this.Recommender,
-      required this.Note,
-      required this.createdAt,
-      this.parentId = ''});
+  CategoryModel({
+    required this.patent_name,
+    required this.id,
+    required this.name,
+    required this.detail_01,
+    required this.detail_02,
+    required this.Recommender,
+    required this.Note,
+    required this.createdAt,
+    this.parentId = '',
+    this.noteCount = 0,
+  });
 
   // Factory method to create a CategoryModel from a Firestore document
   factory CategoryModel.fromFirestore(DocumentSnapshot doc) {
@@ -62,6 +66,12 @@ class CategoryModel {
       Note: data['Note'] ?? '',
       createdAt: data['created_at'] ?? '',
       patent_name: data['patent_name'] ?? '',
+      noteCount: 0,
     );
+  }
+
+  // Method to update the note count
+  void updateNoteCount(int count) {
+    this.noteCount = count;
   }
 }

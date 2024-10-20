@@ -99,8 +99,11 @@ class NoteCategory extends StatelessWidget {
                           ),
                         )
                       else
-                        CircularProgressIndicator(
-                          color: Colors.white,
+                        SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: secondryColor),
                         )
                     ],
                   ),
